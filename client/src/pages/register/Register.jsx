@@ -4,6 +4,7 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from "../../components/formikComponents/FormikControl"
 import { Button } from "@mui/material"
+import axios from 'axios'
 
 
 function Register () {
@@ -23,8 +24,16 @@ function Register () {
     confirmPassword: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords much match').required('Required')
   })
 
-  const onSubmit = (values, formikHelpers) => {
+  const onSubmit = async (values, formikHelpers) => {  //alternatively, i can just destructure this "values" object to directly get the username, password and email.
     console.log('Form data', values)
+
+    try{
+      await axios.post("/auth/registerr", { email: values.email, username: values.username, password: values.password });
+      console.log("User saved!")
+  }catch(err){
+    console.log(`YOUR ERRRRROROOORRRR IS ${err}`)
+  }
+
     formikHelpers.resetForm();
   }
 
