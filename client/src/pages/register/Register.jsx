@@ -28,7 +28,7 @@ function Register () {
     console.log('Form data', values)
 
     try{
-      await axios.post("/auth/registerr", { email: values.email, username: values.username, password: values.password });
+      await axios.post("/auth/register", { email: values.email, username: values.username, password: values.password });
       console.log("User saved!")
   }catch(err){
     console.log(`YOUR ERRRRROROOORRRR IS ${err}`)
