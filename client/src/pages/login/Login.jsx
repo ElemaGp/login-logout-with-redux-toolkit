@@ -4,10 +4,19 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import FormikControl from "../../components/formikComponents/FormikControl"
 import { Button } from "@mui/material"
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { login } from "../../components/reduxToolkit/features/userSlice"
 
 
 function Login () {
 
+  //Redux-toolkit part (the dispatch of the "login" action creator is done in the "onSubmit" a few lines below)
+  const user = useSelector(state => state.user) // "const user" is declared to be equal to the "user" in userSlice.jsx. Meaning it now contains the initial state object properties that the "user" has in useSlice.jsx, and the properties' values will be updates accordingly when the actions are dispatched. Btw, "const user = useSelector(state => state.user)" gives us the state of the entire "user" object in the user slice. If for instance, i just wanted to get the state of the the loading, then i would have done "const user = useSelector(state => state.user.loading)". "user" is what i named my userSlice in userSlice.jsx so it is the name of the user object. Any of the properties (in the "initial state" section) can now be accessed through it eg "state.user.loading", "state.user.websiteuser", "state.user.error".
+  const dispatch = useDispatch()
+
+
+  //formik part
   const initialValues = {
     email: '',
     password: ''
@@ -20,9 +29,12 @@ function Login () {
     password: Yup.string().required('Required')
   })
 
-  const onSubmit = values => {
+  const onSubmit = values => {    //alternatively, i can just destructure this "values" object to directly get the email and password.
     console.log('Form data', values)
+    dispatch(login({email: values.email, password: values.password})) //dispatching the "login" action-creator function in userSlice, which will then dispach the action "user/login" in userSlice.jsx.
   }
+ 
+
 
   return (
     
