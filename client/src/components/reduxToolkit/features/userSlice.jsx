@@ -14,12 +14,12 @@ const initialState = {
 
 
 //actions and doing the async/api call section below
-// createAsyncThunk automatically generates pending, fulfilled and rejected action types aka "start, success, failure"
+// createAsyncThunk automatically generates pending, fulfilled and rejected action types aka "start, success, failure" for any async action.
 export const login = createAsyncThunk('user/login', async (user) => { // "user/login" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "login" here. Thereby giving you "user/login"
    const response = await axios.post('/auth/login', user)
     
    if (response.data) {
-    localStorage.setItem('websiteuser', JSON.stringify(response.data))
+    localStorage.setItem('websiteuser', JSON.stringify(response.data)) //persisting/storing the fetched user data in localstorage
    }
 
    return response.data
@@ -54,5 +54,14 @@ const userSlice = createSlice({
     })
   }
 })
+
+
+//for logout
+//since this is not an async operation (no api calls), createAsyncThunk will not generate pending, fulfilled and rejected action types aka "start, success, failure", therefore no need for a reducer or extraReducer. We're just dispatching the action to logout the user (remove the websiteuser object from localstorage)
+export const logout = createAsyncThunk('user/logout', () => { // "user/logout" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "logout" here. Thereby giving you "user/login"
+  localStorage.removeItem('websiteuser') //removing the fetched user data from the localstorage
+})
+  
+
 
 export default userSlice.reducer
