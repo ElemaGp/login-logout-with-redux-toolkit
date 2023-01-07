@@ -13,9 +13,9 @@ const initialState = {
 
 //actions and doing the async/api call section below
 // createAsyncThunk automatically generates pending, fulfilled and rejected action types aka "start, success, failure"
-export const login = createAsyncThunk('user/login', () => { // "user/login" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "login" here. Thereby giving you "user/login"
+export const login = createAsyncThunk('user/login', (user) => { // "user/login" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "login" here. Thereby giving you "user/login"
   return axios
-    .post('/auth/login')
+    .post('/auth/login', user)
     .then(response => response.data)
 })
 
