@@ -14,6 +14,9 @@ const initialState = {
 
 
 //actions and doing the async/api call section below
+//"login" is the action-creator.
+//"user/login" is the action.
+//"login.pending", "login.fulfilled", "login.rejected" are the action-types.
 // createAsyncThunk automatically generates pending, fulfilled and rejected action types aka "start, success, failure" for any async action.
 export const login = createAsyncThunk('user/login', async (user) => { // "user/login" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "login" here. Thereby giving you "user/login"
    const response = await axios.post('/auth/login', user)
@@ -31,12 +34,26 @@ export const login = createAsyncThunk('user/login', async (user) => { // "user/l
 
 
 
+//for logout
+//for logout, the only action-type needed in the reducer will be "logout.fulfilled" where i'll set the "websiteuser" state back to null, after the code below removes the "websiteuser" object from localstorage.
+//"logout" is the action-creator.
+//"user/logout" is the action.
+//"logout.fulfilled" is the action-type. 
+//the "reset" action-creator can be dispatched whenever you want to reset the state of "loading" and "error" to false eg. once a user logs out.
+export const logout = createAsyncThunk('user/logout', () => { // "user/logout" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "logout" here. Thereby giving you "user/logout"
+  localStorage.removeItem('websiteuser') //removing the fetched user data from the localstorage
+})
+
+
 //reducer section below
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {   //"reducers" in createSlice is used for managing the state of non-async actions.I'm not using it for now but the youtube tutorial from "Travest Media" Learn MERN STack -Frontend Authentication Redux Toolkit in (34:20), said the reducers can be used here to reset the state of any property and he used it. So if i ever run into such issue, i'll check it out.
-
+    reset: (state) => {   //I've finally discovered the use of this "reset" reducer. Now since "logout" is a non-async action-creator which just removes the "websiteuser" object from localstorage and dispatches only the logout.fulfilled action-type, to ensure that the "loading" and "error" properties are set back to being empty/their initial states when the websiteuser logs out (is null), it is advisable to also dispatch this reset action/action-creator so that "loading" and 'error' go back to being null too.
+      state.loading = false
+      state.error = ''
+    }
   },
   extraReducers: builder => { //"extraReducers" in createSlice is used for managing the state of async actions.
     builder.addCase(login.pending, state => {  //this line means that if the case of the action-type is fetchUser.pending (ie fetchUsers_start), "state.loading" becomes true
@@ -52,16 +69,15 @@ const userSlice = createSlice({
       state.websiteuser = ''
       state.error = action.error.message
     })
+    builder.addCase(logout.fulfilled, (state) => {    //for logout, the only action-type needed in the reducer is this "logout.fulfilled" where i'll set the "websiteuser" state back to null.
+      state.websiteuser = null
+    })
   }
 })
 
 
-//for logout
-//since this is not an async operation (no api calls), createAsyncThunk will not generate pending, fulfilled and rejected action types aka "start, success, failure", therefore no need for a reducer or extraReducer. We're just dispatching the action to logout the user (remove the websiteuser object from localstorage)
-export const logout = createAsyncThunk('user/logout', () => { // "user/logout" is the "action". You derive it by mixing the name of the slice (check the slice below which is named "user") and the name of the action-creator function which is "logout" here. Thereby giving you "user/login"
-  localStorage.removeItem('websiteuser') //removing the fetched user data from the localstorage
-})
+
   
 
-
+export const {reset} = userSlice.actions
 export default userSlice.reducer
