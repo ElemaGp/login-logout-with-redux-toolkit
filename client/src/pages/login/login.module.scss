@@ -5,4 +5,16 @@
     justify-content: center;
     align-items: center;
     gap: 16px;
+
+    .passwordArea{
+        position: relative;
+
+        .passwordToggleIcon{
+            position: absolute;
+            right: 5px;
+            top: 11px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+    }
 }
