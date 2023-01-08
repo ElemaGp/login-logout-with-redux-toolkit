@@ -17,7 +17,7 @@ function Login () {
   const dispatch = useDispatch()
 
   //password eye-toggle
-  const [passwordInputType, ToggleIcon] = usePasswordToggle(); //bringing in the values of "const inputType" and "const icon" which i returned from the usePasswordToggle custom hook as "const passwordInputType" and "const ToggleIcon".
+  const [passwordInputType, EyeIcon] = usePasswordToggle(); //bringing in the values of "const inputType" and "const icon" which i returned from the usePasswordToggle custom hook as "const passwordInputType" and "const EyeIcon".
 
   //formik part
   const initialValues = {
@@ -70,11 +70,11 @@ function Login () {
                 error={Boolean(formik.errors.password) && Boolean(formik.touched.password)} //if both "formik.errors" and "formik.touched" are true, then the "error" prop is true.
                 helperText={Boolean(formik.touched.password) && formik.errors.password} //if "formik.touched.password" is true, then display the "formik.errors" associated with the "password".
               />
-              <div className={style.passwordToggleIcon}>{ToggleIcon}</div>
+              <div className={style.passwordEyeIcon}>{EyeIcon}</div>
             </div>
             
             {/* <button type='submit' disabled={!formik.isValid} className={style.btn}>Sign Up</button> "formik.isValid is false whenever there is an error" */}
-            <Button type="submit" variant="contained" color="primary" size="large" disabled={!formik.dirty || !formik.isValid}>Sign Up</Button>
+            <Button type="submit" variant="contained" color="primary" size="large" disabled={!formik.dirty || !formik.isValid}>Login</Button>
           </Form>
         )
       }}

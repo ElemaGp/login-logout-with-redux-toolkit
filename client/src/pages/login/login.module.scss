@@ -9,11 +9,12 @@
     .passwordArea{
         position: relative;
 
-        .passwordToggleIcon{
+        .passwordEyeIcon{
             position: absolute;
             right: 5px;
             top: 11px;
             font-size: 2rem;
+            opacity: 0.7;
             cursor: pointer;
         }
     }
